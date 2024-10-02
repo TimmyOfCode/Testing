@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bread Eater Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="game-canvas" width="600" height="600"></canvas>
+        <div class="game-over" id="game-over">
+            <p id="final-score"></p>
+            <button id="play-again-btn">Play Again</button>
+        </div>
+        <div class="username-input" id="username-input">
+            <input type="text" id="username" placeholder="Enter your username">
+            <button id="submit-username-btn">Submit</button>
+        </div>
+        <div class="avatar-selector" id="avatar-selector">
+            <p>Select your avatar:</p>
+            <select id="avatar-options">
+                <option value="circle">Circle</option>
+                <option value="square">Square</option>
+                <option value="triangle">Triangle</option>
+            </select>
+            <button id="select-avatar-btn">Select</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+styles.css
+CSS
+.game-container {
+    width: 600px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+#game-canvas {
+    border: 1px solid black;
+}
+
+.game-over {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.username-input {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.avatar-selector {
+    display: none;
+}
+
+#play-again-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#play-again-btn:hover {
+    background-color: #3e8e41;
+}
+script.js
+JavaScript
+let username = '';
+let avatar = '';
+let score = 0;
+let size = 10;
+let breadX, breadY;
+let playerX, playerY;
+let gameOver = false;
+
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+const gameOverDiv = document.getElementById('game-over');
+const finalScoreText = document.getElementById('final-score');
+const playAgainBtn = document.getElementById('play-again-btn');
+const usernameInput = document.getElementById('username');
+const usernameInputDiv = document.getElementById('username-input');
+const avatarSelectorDiv = document.getElementById('avatar-selector');
+const avatarOptions = document.getElementById('avatar-options');
+const selectAvatarBtn = document.getElementById('select-avatar-btn');
+
+// Get username and avatar
+usernameInputDiv.style.display = 'block';
+selectAvatarBtn.addEventListener('click', () => {
+    avatar = avatarOptions.value;
+    usernameInputDiv.style.display = 'none';
+    avatarSelectorDiv.style.display = 'none';
+    startGame();
+});
+
+document.getElementById('submit-username-btn').addEventListener('click', () => {
+    username = usernameInput.value;
+    avatarSelectorDiv.style.display = 'block';
+});
+
+// Game logic
+function startGame() {
+    score = 0;
+    size = 10;
+    playerX = canvas.width / 2;
+    playerY = canvas.height / 2;
+    breadX = Math.random() * (canvas.width - 20);
+    breadY = Math.random() * (canvas.height - 20);
+    gameOver = false;
+    gameOverDiv.style.display = 'none';
+    draw();
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.font = '24px Arial';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(`Score: ${score}`, 10, 10);
+    ctx.fillText(`Size: ${size}`, 10, 40);
+
+    // Draw player
+    ctx.fillStyle = 'blue';
+    if (avatar === 'circle') {
+        ctx.beginPath();
+        ctx.arc(playerX,
